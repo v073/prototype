@@ -1,6 +1,8 @@
 #!/usr/bin/env perl
 use Mojolicious::Lite -signatures;
 
+plugin Config => {file => 'v073.conf'};
+
 get '/' => sub ($c) {
     $c->render(template => 'index');
 };
