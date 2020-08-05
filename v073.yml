@@ -1,0 +1,6 @@
+voting:
+    default_options:
+        pro_contra:
+            - Dafür
+            - Dagegen
+            - Enthaltung
