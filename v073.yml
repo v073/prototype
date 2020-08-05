@@ -1,3 +1,7 @@
+db:
+    file:           db
+    schema_file:    schema.sql
+
 voting:
     default_options:
         pro_contra:
