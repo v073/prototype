@@ -28,7 +28,10 @@ sub _prepare_db ($self) {
     }
 
     # Add schema as web app helper
-    $self->helper(db => sub { state $db = V073::DB->connect($dsn) });
+    $self->helper(db => sub ($app, $rs) {
+        state $db = V073::DB->connect($dsn);
+        return defined($rs) ? $db->resultset($rs) : $db;
+    });
 }
 
 sub _add_default_options ($self) {
@@ -38,7 +41,7 @@ sub _add_default_options ($self) {
 
     # Add to database
     while (my ($type_name, $option_names) = each %$default_options) {
-        my $type = $self->db->resultset('Type')->create({name => $type_name});
+        my $type = $self->db('Type')->create({name => $type_name});
         $type->create_related(options => {text => $_}) for @$option_names;
     }
 }
@@ -51,8 +54,8 @@ sub __generate_token ($len) {
 sub _token_helper ($self) {
     $self->helper(token => sub ($self) {
         my $token   = __generate_token($self->config('token_length'));
-        my $voting  = $self->db->resultset('Voting')->count({token => $token});
-        my $vote    = $self->db->resultset('Token')->count({token => $token});
+        my $voting  = $self->db('Voting')->count({token => $token});
+        my $vote    = $self->db('Token')->count({token => $token});
         $token      = $self->token if $voting or $vote;
         return $token;
     });
