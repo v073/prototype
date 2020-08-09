@@ -8,6 +8,7 @@ sub startup ($self) {
     $self->plugin('NotYAMLConfig'); # Load from v073.yml
     $self->_prepare_db;
     $self->_add_default_options;
+    $self->_token_helper;
     $self->_set_routes;
 }
 
@@ -40,6 +41,21 @@ sub _add_default_options ($self) {
         my $type = $self->db->resultset('Type')->create({name => $type_name});
         $type->create_related(options => {text => $_}) for @$option_names;
     }
+}
+
+sub __generate_token ($len) {
+    my @chars = ('A'..'Z', '0'..'9');
+    return join '' => map $chars[rand @chars] => 1 .. $len;
+}
+
+sub _token_helper ($self) {
+    $self->helper(token => sub ($self) {
+        my $token   = __generate_token($self->config('token_length'));
+        my $voting  = $self->db->resultset('Voting')->count({token => $token});
+        my $vote    = $self->db->resultset('Token')->count({token => $token});
+        $token      = $self->token if $voting or $vote;
+        return $token;
+    });
 }
 
 sub _set_routes ($self) {
