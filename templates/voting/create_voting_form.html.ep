@@ -1,0 +1,10 @@
+% layout 'default';
+% title 'Create a voting';
+<h1><%= title %></h1>
+%= form_for create_voting => (method => 'post') => begin
+    <p>
+        %= label_for text => 'Text:'
+        %= text_field text => (id => 'text')
+        %= submit_button 'Create voting'
+    </p>
+% end
