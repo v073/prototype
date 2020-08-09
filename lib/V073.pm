@@ -31,7 +31,17 @@ sub _prepare_db ($self) {
 
 sub _set_routes ($self) {
     my $r = $self->routes;
-    $r->get('/')->to('example#welcome');
+
+    # Home: insert token
+    $r->get('/')->to('home#token_form')->name('home');
+
+    # Or: create voting
+    $r->get('/create_voting')->to('voting#create_voting_form');
+    $r->post('/create_voting')->to('voting#create_voting')->name('create');
+
+    # Inspect / modify voting
+    my $ra = $r->under('/voting')->to('voting#restricted');
+    $ra->get('/')->to('#view');
 }
 
 1;
