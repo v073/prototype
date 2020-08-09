@@ -7,6 +7,7 @@ use V073::DB;
 sub startup ($self) {
     $self->plugin('NotYAMLConfig'); # Load from v073.yml
     $self->_prepare_db;
+    $self->_add_default_options;
     $self->_set_routes;
 }
 
@@ -27,6 +28,18 @@ sub _prepare_db ($self) {
 
     # Add schema as web app helper
     $self->helper(db => sub { state $db = V073::DB->connect($dsn) });
+}
+
+sub _add_default_options ($self) {
+
+    # Load default options from config
+    my $default_options = $self->config('voting')->{default_options};
+
+    # Add to database
+    while (my ($type_name, $option_names) = each %$default_options) {
+        my $type = $self->db->resultset('Type')->create({name => $type_name});
+        $type->create_related(options => {text => $_}) for @$option_names;
+    }
 }
 
 sub _set_routes ($self) {
