@@ -23,13 +23,13 @@ sub _prepare_db ($self) {
 
     # Load schema into sqlite db, if neccessary
     unless (-e $db_file) {
-        my $dbh = DBI->connect($dsn, '', '');
+        my $dbh = DBI->connect($dsn, '', '', {sqlite_unicode => 1});
         $dbh->do($_) for split /;/ => $schema_file->slurp;
     }
 
     # Add schema as web app helper
     $self->helper(db => sub ($app, $rs) {
-        state $db = V073::DB->connect($dsn);
+        state $db = V073::DB->connect($dsn, '', '', {sqlite_unicode => 1});
         return defined($rs) ? $db->resultset($rs) : $db;
     });
 }
