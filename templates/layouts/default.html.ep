@@ -5,7 +5,7 @@
     <main><%= content %></main>
     <hr>
     <footer>
-      <p>This page doesn't work without cookies.</p>
+      <p>This page doesn't work without cookies. 🍪</p>
       <p>Released as open source software under the MIT license</p>
       <p><a href="https://github.com/memowe/v073">V073 code @ GitHub</a></p>
     </footer>
