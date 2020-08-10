@@ -1,0 +1,14 @@
+% layout 'default';
+% title 'Voting ' . $voting->text;
+<h1><%= title %></h1>
+<table>
+    <thead><tr><th>Option</th><th>Votes</th></tr></thead>
+    <tbody>
+    % for my $option ($options->all) {
+        <tr>
+            <th><%= $option->text %></th>
+            <td><%= $option_vote_counts->{$option->id} %></td>
+        </tr>
+    % }
+    </tbody>
+</table>

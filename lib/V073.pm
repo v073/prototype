@@ -74,7 +74,7 @@ sub _set_routes ($self) {
 
     # Inspect / modify voting
     my $ra = $r->under('/voting')->to('voting#restricted');
-    $ra->get('/')->to('#view');
+    $ra->get('/')->to('#view')->name('voting');
 }
 
 1;
