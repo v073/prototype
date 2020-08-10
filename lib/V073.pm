@@ -55,7 +55,7 @@ sub _token_helper ($self) {
     $self->helper(token => sub ($self) {
         my $token   = __generate_token($self->config('token_length'));
         my $voting  = $self->db('Voting')->count({token => $token});
-        my $vote    = $self->db('Token')->count({token => $token});
+        my $vote    = $self->db('Token')->count({name => $token});
         $token      = $self->token if $voting or $vote;
         return $token;
     });
