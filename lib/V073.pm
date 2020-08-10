@@ -41,6 +41,7 @@ sub _add_default_options ($self) {
 
     # Add to database
     while (my ($type_name, $option_names) = each %$default_options) {
+        next if $self->db('Type')->count({name => $type_name});
         my $type = $self->db('Type')->create({name => $type_name});
         $type->create_related(options => {text => $_}) for @$option_names;
     }
