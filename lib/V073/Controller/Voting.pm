@@ -38,24 +38,19 @@ sub restricted ($self) {
 
 sub view ($self) {
 
-    # Prepare options and votes for this voting
-    my $voting  = $self->stash('voting');
-    my $options = $voting->type->options(
-        {'votes.voting' => $voting->id},
-        {prefetch => 'votes'}
-    );
-
     # Calculate vote counts by option
-    my %option_votes = ();
+    my $voting  = $self->stash('voting');
+    my $options = $voting->type->options;
+    my %ov      = ();
     for my $option ($options->all) {
-        $option_votes{$option->id} = scalar($option->votes->all);
+        $ov{$option->id} = $option->votes({voting => $voting->id})->count;
     }
 
     # Done
     $self->stash(
         voting              => $voting,
         options             => $options,
-        option_vote_counts  => \%option_votes,
+        option_vote_counts  => \%ov,
     );
 }
 
