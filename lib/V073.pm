@@ -67,9 +67,10 @@ sub _set_routes ($self) {
 
     # Home: insert token
     $r->get('/')->to('home#token_form')->name('home');
+    $r->post('/')->to('home#token_dispatch')->name('token_dispatch');
 
     # Or: create voting
-    $r->get('/create_voting')->to('voting#create_voting_form');
+    $r->get('/create_voting')->to('voting#create_voting_form')->name('create');
     $r->post('/create_voting')->to('voting#create_voting')->name('create');
 
     # Inspect / modify voting

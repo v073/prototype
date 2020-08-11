@@ -1,0 +1,13 @@
+% layout 'default';
+% title 'Insert token';
+<h1>Welcome to V073!</h1>
+<hr>
+%= form_for token_dispatch => (method => 'post') => begin
+    <p>
+        %= label_for token => 'Enter your token:'
+        %= text_field token => (id => 'token')
+        %= submit_button 'Enter'
+    </p>
+% end
+<hr>
+<p>... or start a <%= link_to 'new voting' => 'create' %></p>
