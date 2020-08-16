@@ -76,6 +76,11 @@ sub _set_routes ($self) {
     # Inspect / modify voting
     my $ra = $r->under('/voting')->to('voting#restricted');
     $ra->get('/')->to('#view')->name('voting');
+
+    # Cast a vote
+    my $rv = $r->under('/vote')->to('vote#restricted');
+    $rv->get('/')->to('#view')->name('view_vote');
+    $rv->post('/')->to('#cast')->name('cast_vote');
 }
 
 1;

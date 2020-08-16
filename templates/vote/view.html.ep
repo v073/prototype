@@ -1,0 +1,17 @@
+% layout 'default';
+% title 'Voting ' . $voting->text;
+<h1><%= title %></h1>
+<p>Cast your vote:</p>
+%= form_for cast_vote => (method => 'post') => begin
+    <fieldset>
+        % for my $option ($options->all) {
+            % my $oid = 'option' . $option->id;
+            <strong>
+                %= radio_button option => $option->id => (id => $oid)
+                %= label_for $oid => $option->text
+            </strong>
+            <br>
+        % }
+        %= submit_button 'Vote'
+    </fieldset>
+% end
