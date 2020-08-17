@@ -76,6 +76,7 @@ sub _set_routes ($self) {
     # Inspect / modify voting
     my $ra = $r->under('/voting')->to('voting#restricted');
     $ra->get('/')->to('#view')->name('voting');
+    $ra->post('/tokens')->to('voting#generate_tokens')->name('generate_tokens');
 
     # Cast a vote
     my $rv = $r->under('/vote')->to('vote#restricted');

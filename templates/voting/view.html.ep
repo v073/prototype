@@ -13,3 +13,19 @@
     % }
     </tbody>
 </table>
+<h2>Tokens for votes</h2>
+% if (my @tokens = $voting->tokens->all) {
+<ol id="vote_tokens">
+    % for my $token ($voting->tokens->all) {
+        <li><%= $token->name %></li>
+    % }
+</ol>
+% }
+%= form_for generate_tokens => (method => 'post') => begin
+<p>
+    Generate
+    %= text_field token_count => 5
+    new tokens:
+    %= submit_button 'Generate'
+</p>
+% end

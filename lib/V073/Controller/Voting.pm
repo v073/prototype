@@ -54,4 +54,22 @@ sub view ($self) {
     );
 }
 
+sub generate_tokens ($self) {
+
+    # Check token count
+    my $count = $self->param('token_count');
+    $count =~ s/^\s*(\S+)\s*$/$1/;
+    return $self->render(text => 'Invalid token count', status => 403)
+        if $count =~ /\D/ or $count < 1 or $count > 1_000;
+
+    # Generate and store tokens
+    for my $i (1 .. $count) {
+        my $token = $self->token; # Generate
+        $self->stash('voting')->create_related(tokens => {name => $token});
+    }
+
+    # Done
+    return $self->redirect_to('voting');
+}
+
 1;
