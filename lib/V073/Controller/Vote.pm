@@ -8,7 +8,8 @@ sub restricted ($self) {
     $self->reply->not_found and return unless defined $token_name;
 
     # Try to load
-    my $token = $self->db('Token')->search({name => $token_name})->first;
+    my $token = $self->db('Token')->search({'me.name' => $token_name},
+        {prefetch => {voting => {type => 'options'}}})->first;
     $self->reply->not_found and return unless defined $token;
 
     # Store
