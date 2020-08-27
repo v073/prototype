@@ -29,7 +29,8 @@ sub restricted ($self) {
     $self->reply->not_found and return unless defined $voting_id;
 
     # Try to load
-    my $voting = $self->db('Voting')->search({id => $voting_id})->first;
+    my $voting = $self->db('Voting')->search({'me.id' => $voting_id},
+        {prefetch => {type => 'options'}})->first;
     $self->reply->not_found and return unless defined $voting;
 
     # Store
@@ -37,21 +38,7 @@ sub restricted ($self) {
 }
 
 sub view ($self) {
-
-    # Calculate vote counts by option
-    my $voting  = $self->stash('voting');
-    my $options = $voting->type->options;
-    my %ov      = ();
-    for my $option ($options->all) {
-        $ov{$option->id} = $option->votes({voting => $voting->id})->count;
-    }
-
-    # Done
-    $self->stash(
-        voting              => $voting,
-        options             => $options,
-        option_vote_counts  => \%ov,
-    );
+    # Template only
 }
 
 sub generate_tokens ($self) {

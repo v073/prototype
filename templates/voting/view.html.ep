@@ -2,21 +2,16 @@
 % title 'Voting ' . $voting->text;
 <h1><%= title %></h1>
 <p>Write down your voting token: <strong><%= $voting->token %></strong></p>
-<table>
-    <thead><tr><th>Option</th><th>Votes</th></tr></thead>
-    <tbody>
-    % for my $option ($options->all) {
-        <tr>
-            <th><%= $option->text %></th>
-            <td><%= $option_vote_counts->{$option->id} %></td>
-        </tr>
-    % }
-    </tbody>
-</table>
+<p>Available options:</p>
+<ul>
+% for my $option ($voting->type->options) {
+    <li><%= $option->text %></li>
+% }
+</ul>
 <h2>Tokens for votes</h2>
 % if (my @tokens = $voting->tokens->all) {
 <ol id="vote_tokens">
-    % for my $token ($voting->tokens->all) {
+    % for my $token (@tokens) {
         <li><%= $token->name %></li>
     % }
 </ol>
