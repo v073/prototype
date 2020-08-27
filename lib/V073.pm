@@ -9,6 +9,7 @@ sub startup ($self) {
     $self->_prepare_db;
     $self->_add_default_options;
     $self->_token_helper;
+    $self->_other_helpers;
     $self->_set_routes;
 }
 
@@ -60,6 +61,13 @@ sub _token_helper ($self) {
         $token      = $self->token if $voting or $vote;
         return $token;
     });
+}
+
+sub _other_helpers ($self) {
+
+    # Render percent from [0,1]
+    $self->helper(percent => sub {sprintf '%.2f %%' => $_[1] * 100});
+    # TODO localization?
 }
 
 sub _set_routes ($self) {
