@@ -1,0 +1,4 @@
+% layout 'default';
+% title 'Voting ' . $voting->text;
+<h1><%= title %></h1>
+<p>To see the results, come back when the voting is closed.</p>

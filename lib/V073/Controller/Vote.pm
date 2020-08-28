@@ -20,8 +20,34 @@ sub restricted ($self) {
     );
 }
 
-sub view ($self) {
-    # Template only
+sub vote ($self) {
+
+    # Prepare
+    my $token   = $self->stash('token');
+    my $voting  = $self->stash('voting');
+
+    # Dispatch template
+    return $self->render(template => 'vote/too_early')
+        if not $voting->started;
+    return $self->render(template => 'vote/cast_form')
+        if $voting->started and not $voting->closed and not $token->voted;
+    return $self->render(template => 'vote/wait')
+        if not $voting->closed;
+    # else: show the results
+
+    # We have results! Count them!
+    my $vote_total  = $voting->votes->count;
+    my $token_total = $voting->tokens->count;
+    my %count; $count{$_->get_column('option')}++ for $voting->votes;
+    # $_->option->id whould lead to a new request
+
+    # Done
+    return $self->render(
+        vote_count  => \%count,
+        vote_total  => $vote_total,
+        token_total => $token_total,
+        template    => 'vote/results',
+    );
 }
 
 sub cast ($self) {

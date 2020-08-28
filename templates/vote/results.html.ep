@@ -1,0 +1,25 @@
+% layout 'default';
+% title 'Voting ' . $voting->text;
+<h1><%= title %></h1>
+<p>The vote has been closed. Here are the results.</p>
+<hr>
+<p>Out of <%= $token_total %> tokens, <%= $vote_total %> have been used to cast a vote.</p>
+<table>
+    <thead><tr>
+        <th>Option</th>
+        <th>Votes</th>
+        <th>% of votes</th>
+        <th>% of tokens</th>
+        </tr></thead>
+    <tbody>
+    % for my $option ($options->all) {
+    %   my $count = $vote_count->{$option->id} // 0;
+        <tr>
+            <td><%= $option->text %></td>
+            <td><%= $count %></td>
+            <td><%= percent $count / ($vote_total  || 1) %></td>
+            <td><%= percent $count / ($token_total || 1) %></td>
+        </tr>
+    % }
+    </tbody>
+</table>

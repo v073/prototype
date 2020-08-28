@@ -90,7 +90,7 @@ sub _set_routes ($self) {
 
     # Cast a vote
     my $rv = $r->under('/vote')->to('vote#restricted');
-    $rv->get('/')->to('#view')->name('view_vote');
+    $rv->get('/')->to('#vote')->name('vote');
     $rv->post('/')->to('#cast')->name('cast_vote');
 }
 

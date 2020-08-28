@@ -1,0 +1,4 @@
+% layout 'default';
+% title 'Voting ' . $voting->text;
+<h1><%= title %></h1>
+<p>The voting has not yet been opened. Please come back later.</p>
