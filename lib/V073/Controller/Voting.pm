@@ -59,4 +59,14 @@ sub generate_tokens ($self) {
     return $self->redirect_to('voting');
 }
 
+sub start ($self) {
+    $self->stash('voting')->update({started => 1});
+    return $self->redirect_to('voting');
+}
+
+sub close ($self) {
+    $self->stash('voting')->update({closed => 1});
+    return $self->redirect_to('voting');
+}
+
 1;

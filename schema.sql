@@ -3,7 +3,8 @@ create table voting (
     type    text    not null references type(name),
     token   text    not null unique,
     text    text,
-    open    integer default 0
+    started integer default 0,
+    closed  integer default 0
 );
 
 create table type (
