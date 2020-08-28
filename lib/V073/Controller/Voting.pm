@@ -34,11 +34,34 @@ sub restricted ($self) {
     $self->reply->not_found and return unless defined $voting;
 
     # Store
-    $self->stash(voting => $voting);
+    $self->stash(
+        voting  => $voting,
+        options => scalar($voting->type->options),
+    );
 }
 
 sub view ($self) {
-    # Template only
+
+    # Closed: show the results
+    my $voting = $self->stash('voting');
+    if ($voting->closed) {
+
+        # Count
+        my $vote_total  = $voting->votes->count;
+        my $token_total = $voting->tokens->count;
+        my %count; $count{$_->get_column('option')}++ for $voting->votes;
+        # $_->option->id would lead to a new request
+
+        # Done
+        return $self->render(
+            vote_count  => \%count,
+            vote_total  => $vote_total,
+            token_total => $token_total,
+            template    => 'vote/results',
+        );
+    }
+
+    return $self->render(template => 'voting/view');
 }
 
 sub generate_tokens ($self) {
