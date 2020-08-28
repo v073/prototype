@@ -68,8 +68,8 @@ sub cast ($self) {
     # Disable the token
     $self->stash('token')->update({voted => 1});
 
-    # Got to voting view
-    return $self->redirect_to('view_vote');
+    # Done
+    return $self->render(template => 'vote/thanks');
 }
 
 1;

@@ -1,0 +1,5 @@
+% layout 'default';
+% title 'Voting ' . $voting->text;
+<h1><%= title %></h1>
+<p>Thank your for casting your vote!</p>
+<p><%= link_to 'Back to the voting' => 'vote' %></p>
