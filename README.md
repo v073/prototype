@@ -39,8 +39,11 @@ v073 is a standard Mojolicious app and can be [deployed for production][deploy] 
 $ hypnotoad script/v073
 ```
 
+Alternatively, it can be built and run as a docker image from the [Dockerfile][dkf].
+
 [deploy]: https://docs.mojolicious.org/Mojolicious/Guides/Cookbook#DEPLOYMENT
 [hypnotoad]: https://docs.mojolicious.org/Mojolicious/Guides/Cookbook#Hypnotoad
+[dkf]: Dockerfile
 
 ## Author and License
 
