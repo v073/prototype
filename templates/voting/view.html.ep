@@ -18,7 +18,8 @@
     %= button_to 'Start the voting' => 'start_voting'
     with <%= $token_count %> tokens!
 % }
-% elsif (not $voting->closed) {
+
+% if ($voting->started and not $voting->closed) {
     %= button_to 'Close the voting' => 'close_voting'
 % }
 
