@@ -2,8 +2,6 @@
 % title 'Voting ' . $voting->text;
 <h1><%= title %></h1>
 
-<p>Write down your voting token: <strong><%= $voting->token %></strong></p>
-
 <hr>
 <h2>Available options</h2>
 <ul>
@@ -12,22 +10,23 @@
 % }
 </ul>
 
+<hr>
+<p>
+
 % my $token_count = $voting->tokens->count;
 % if (not $voting->started and $token_count > 0) {
-    <hr>
-    <p>
-        %= button_to 'Start the voting' => 'start_voting'
-        with <%= $token_count %> tokens!
-    </p>
+    %= button_to 'Start the voting' => 'start_voting'
+    with <%= $token_count %> tokens!
 % }
 % elsif (not $voting->closed) {
-    <hr>
-    <p>
-        %= button_to 'Close the voting' => 'close_voting'
-    </p>
+    %= button_to 'Close the voting' => 'close_voting'
 % }
 
+%= link_to 'View admin token' => 'admin_token'
+
+</p>
 <hr>
+
 <h2>Tokens for votes</h2>
 % if (my @tokens = $voting->tokens->all) {
 <ol id="vote_tokens">
