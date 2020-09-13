@@ -19,7 +19,7 @@ sub create_voting ($self) {
 
     # Save & redirect
     $self->session(voting => $voting->id);
-    return $self->redirect_to('voting');
+    return $self->redirect_to('admin_token');
 }
 
 sub restricted ($self) {
@@ -38,6 +38,10 @@ sub restricted ($self) {
         voting  => $voting,
         options => scalar($voting->type->options),
     );
+}
+
+sub admin_token ($self) {
+    # Template only
 }
 
 sub view ($self) {

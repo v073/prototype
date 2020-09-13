@@ -1,0 +1,9 @@
+% layout 'default';
+% title 'Voting ' . $voting->text;
+<h1>Important: Admin token</h1>
+
+<p>Write down your admin token for the voting: <em><%= $voting->text %></em></p>
+
+<p id="admin_token"><big><%= $voting->token %></big></p>
+
+<p><%= link_to Continue => 'voting' %></p>
