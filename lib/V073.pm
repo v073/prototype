@@ -86,6 +86,7 @@ sub _set_routes ($self) {
     $ra->get('/admin_token')->to('#admin_token')->name('admin_token');
     $ra->get('/')->to('#view')->name('voting');
     $ra->post('/tokens')->to('#generate_tokens')->name('generate_tokens');
+    $ra->post('/tokens/delete')->to('#delete_token')->name('delete_token');
     $ra->post('/start')->to('#start')->name('start_voting');
     $ra->post('/close')->to('#close')->name('close_voting');
 

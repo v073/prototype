@@ -32,7 +32,13 @@
 % if (my @tokens = $voting->tokens->all) {
 <ol id="vote_tokens">
     % for my $token (@tokens) {
-        <li><%= $token->name %></li>
+        <li>
+            %= $token->name
+            %= form_for delete_token => (method => 'post') => begin
+                %= hidden_field token => $token->name
+                %= submit_button 'X'
+            % end
+        </li>
     % }
 </ol>
 % }

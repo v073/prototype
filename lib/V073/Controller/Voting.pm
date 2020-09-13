@@ -98,6 +98,20 @@ sub generate_tokens ($self) {
     return $self->redirect_to('voting');
 }
 
+sub delete_token ($self) {
+
+    # Prepare
+    my $voting      = $self->stash('voting');
+    my $token_name  = $self->param('token');
+
+    # Delete
+    my $deleted = $voting->delete_related(tokens => {name => $token_name});
+    return $self->reply->not_found unless $deleted;
+
+    # Done
+    return $self->redirect_to('voting');
+}
+
 sub start ($self) {
 
     # Prepare
