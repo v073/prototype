@@ -87,11 +87,31 @@ sub generate_tokens ($self) {
 }
 
 sub start ($self) {
+
+    # Prepare
+    my $voting      = $self->stash('voting');
+    my $token_count = $voting->tokens->count;
+
+    # Forbidden state to start the voting?
+    return $self->render(text => 'Forbidden', status => 403)
+        if $token_count <= 0;
+
+    # OK, start
     $self->stash('voting')->update({started => 1});
     return $self->redirect_to('voting');
 }
 
 sub close ($self) {
+
+    # Prepare
+    my $voting      = $self->stash('voting');
+    my $token_count = $voting->tokens->count;
+
+    # Forbidden state to close the voting?
+    return $self->render(text => 'Forbidden', status => 403)
+        if not $voting->started;
+
+    # OK, close
     $self->stash('voting')->update({closed => 1});
     return $self->redirect_to('voting');
 }
