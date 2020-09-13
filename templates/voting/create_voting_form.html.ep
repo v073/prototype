@@ -5,6 +5,12 @@
     <p>
         %= label_for text => 'Text:'
         %= text_field text => (id => 'text')
+    </p>
+    <p>
+        %= label_for token_count => 'Optional: initial token number:'
+        %= text_field token_count => 0 => (id => 'token_count')
+    </p>
+    <p>
         %= submit_button 'Create voting'
     </p>
 % end

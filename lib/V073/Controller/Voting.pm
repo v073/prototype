@@ -17,6 +17,17 @@ sub create_voting ($self) {
         token   => $self->token,
     });
 
+    # Generate initial tokens
+    my $count = $self->param('token_count');
+    $count =~ s/^\s*(\S+)\s*$/$1/;
+    return $self->render(text => 'Invalid token count', status => 403)
+        if $count =~ /\D/ or $count < 0
+        or $count > $self->config('voting')->{max_token_count};
+    for my $i (1 .. $count) {
+        my $token = $self->token; # Generate
+        $voting->create_related(tokens => {name => $token});
+    }
+
     # Save & redirect
     $self->session(voting => $voting->id);
     return $self->redirect_to('admin_token');
