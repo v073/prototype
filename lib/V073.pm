@@ -83,11 +83,11 @@ sub _set_routes ($self) {
 
     # Inspect / modify voting
     my $ra = $r->under('/voting')->to('voting#restricted');
-    $ra->get('/admin_token')->to('voting#admin_token')->name('admin_token');
+    $ra->get('/admin_token')->to('#admin_token')->name('admin_token');
     $ra->get('/')->to('#view')->name('voting');
-    $ra->post('/tokens')->to('voting#generate_tokens')->name('generate_tokens');
-    $ra->post('/start')->to('voting#start')->name('start_voting');
-    $ra->post('/close')->to('voting#close')->name('close_voting');
+    $ra->post('/tokens')->to('#generate_tokens')->name('generate_tokens');
+    $ra->post('/start')->to('#start')->name('start_voting');
+    $ra->post('/close')->to('#close')->name('close_voting');
 
     # Cast a vote
     my $rv = $r->under('/vote')->to('vote#restricted');
