@@ -15,18 +15,16 @@
 % my $token_count = $voting->tokens->count;
 % if (not $voting->started and $token_count > 0) {
     <hr>
-    %= form_for start_voting => begin
     <p>
-        %= submit_button 'Start the voting'
+        %= button_to 'Start the voting' => 'start_voting'
         with <%= $token_count %> tokens!
     </p>
-    % end
 % }
 % elsif (not $voting->closed) {
     <hr>
-    %= form_for close_voting => begin
-        <p><%= submit_button 'Close the voting' %></p>
-    % end
+    <p>
+        %= button_to 'Close the voting' => 'close_voting'
+    </p>
 % }
 
 <hr>
