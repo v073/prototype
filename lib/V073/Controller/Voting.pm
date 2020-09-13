@@ -80,6 +80,11 @@ sub view ($self) {
 }
 
 sub generate_tokens ($self) {
+    my $voting = $self->stash('voting');
+
+    # Too late?
+    return $self->render(text => 'Voting started', status => 403)
+        if $voting->started;
 
     # Check token count
     my $count = $self->param('token_count');
@@ -91,7 +96,7 @@ sub generate_tokens ($self) {
     # Generate and store tokens
     for my $i (1 .. $count) {
         my $token = $self->token; # Generate
-        $self->stash('voting')->create_related(tokens => {name => $token});
+        $voting->create_related(tokens => {name => $token});
     }
 
     # Done
@@ -99,13 +104,15 @@ sub generate_tokens ($self) {
 }
 
 sub delete_token ($self) {
+    my $voting = $self->stash('voting');
 
-    # Prepare
-    my $voting      = $self->stash('voting');
-    my $token_name  = $self->param('token');
+    # Too late?
+    return $self->render(text => 'Voting started', status => 403)
+        if $voting->started;
 
     # Delete
-    my $deleted = $voting->delete_related(tokens => {name => $token_name});
+    my $token   = $self->param('token');
+    my $deleted = $voting->delete_related(tokens => {name => $token});
     return $self->reply->not_found unless $deleted;
 
     # Done
