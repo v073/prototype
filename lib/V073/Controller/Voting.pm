@@ -25,13 +25,35 @@ sub create_voting_form ($self) {
     );
 }
 
+sub _create_free_type_name ($len = 20) {
+    my @chars = ('a'..'z', '0'..'9');
+    return join '' => map $chars[rand @chars] => 1 .. $len;
+}
+
 sub create_voting ($self) {
 
-    # Find the correct type
-    my $type = $self->db('Type')->find($self->param('type'));
-    return $self->reply->not_found unless defined $type;
+    # Create a new type
+    my $type_name = $self->param('type');
+    my $type;
+    if ($type_name eq 'free') {
 
-    # Create
+        # Create the type
+        $type_name = 'free_' . _create_free_type_name;
+        $self->db('Type')->create({name => $type_name});
+        $type = $self->db('Type')->find($type_name);
+
+        # Create the initial option (abstention)
+        my $abst = $self->config('voting')->{abstention};
+        $type->create_related(options => {text => $abst});
+    }
+
+    # Or try to load the correct type
+    else {
+        $type = $self->db('Type')->find($type_name);
+        return $self->reply->not_found unless defined $type;
+    }
+
+    # Create the voting
     my $voting = $self->db('Voting')->create({
         text    => $self->param('text'),
         type    => $type->name,
