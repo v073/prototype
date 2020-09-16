@@ -24,7 +24,8 @@ create table vote (
 );
 
 create table token (
-    name    text    primary key,
+    id      integer primary key autoincrement,
+    name    text    not null unique,
     voting  integer not null references voting(id),
     voted   integer default 0
 );
