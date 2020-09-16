@@ -4,11 +4,18 @@
 
 <hr>
 <h2>Available options</h2>
-<ul>
-% for my $option ($voting->type->options) {
-    <li><%= $option->text %></li>
+
+% if (my @options = $voting->type->options) {
+    <ul>
+    % for my $option (@options) {
+        <li>
+            %= $option->text
+        </li>
+    % }
+    </ul>
+% } else {
+    <p>No options yet.</p>
 % }
-</ul>
 
 % if ($voting->type->name =~ /^free_/ and not $voting->started) {
     %= form_for add_option => begin
