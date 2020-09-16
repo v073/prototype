@@ -122,6 +122,26 @@ sub view ($self) {
     return $self->render(template => 'voting/view');
 }
 
+sub add_option ($self) {
+    my $type = $self->stash('voting')->type;
+
+    # Not possible with un-free types
+    return $self->render(text => 'Type not free', status => 403)
+        unless $type->name =~ /^free_/;
+
+    # Prepare option text
+    my $text = $self->param('option');
+    return $self->render(text => 'No option given', status => 403)
+        unless defined $text and $text =~ /\S/;
+    $text =~ s/^\s*(.*?)\s*$/$1/;
+
+    # Create the new option for the voting's type
+    $type->create_related(options => {text => $text});
+
+    # Done
+    return $self->redirect_to('voting');
+}
+
 sub manage_tokens ($self) {
     my $voting = $self->stash('voting');
 

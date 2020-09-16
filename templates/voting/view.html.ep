@@ -10,6 +10,16 @@
 % }
 </ul>
 
+% if ($voting->type->name =~ /^free_/ and not $voting->started) {
+    %= form_for add_option => begin
+    <p>
+        %= label_for option => 'Add a new option:'
+        %= text_field option => (id => 'option')
+        %= submit_button 'Add'
+    </p>
+    % end
+% }
+
 <hr>
 <p>
 
