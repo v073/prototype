@@ -45,10 +45,12 @@
     % for my $token (@tokens) {
         <li>
             %= $token->name
-            %= form_for delete_token => (method => 'post') => begin
-                %= hidden_field token => $token->name
-                %= submit_button 'X'
-            % end
+            % if (not $voting->started) {
+                %= form_for delete_token => (method => 'post') => begin
+                    %= hidden_field token => $token->name
+                    %= submit_button 'X'
+                % end
+            % }
         </li>
     % }
 </ol>
