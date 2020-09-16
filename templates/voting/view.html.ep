@@ -29,7 +29,18 @@
 <hr>
 
 <h2>Tokens for votes</h2>
-% if (my @tokens = $voting->tokens->all) {
+
+% if (not $voting->started) {
+    %= form_for manage_tokens => (method => 'post') => begin
+    <p>
+        %= text_field token_count => $token_count
+        Tokens.
+        %= submit_button 'Update'
+    </p>
+    % end
+% }
+
+% if (my @tokens = $voting->tokens({}, {order_by => 'id'})) {
 <ol id="vote_tokens">
     % for my $token (@tokens) {
         <li>
@@ -41,14 +52,4 @@
         </li>
     % }
 </ol>
-% }
-% if (not $voting->started) { # Really?
-    %= form_for generate_tokens => (method => 'post') => begin
-    <p>
-        Generate
-        %= text_field token_count => 5
-        new tokens:
-        %= submit_button 'Generate'
-    </p>
-    % end
 % }

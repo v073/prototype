@@ -79,7 +79,7 @@ sub view ($self) {
     return $self->render(template => 'voting/view');
 }
 
-sub generate_tokens ($self) {
+sub manage_tokens ($self) {
     my $voting = $self->stash('voting');
 
     # Too late?
@@ -93,10 +93,19 @@ sub generate_tokens ($self) {
         if $count =~ /\D/ or $count < 1
         or $count > $self->config('voting')->{max_token_count};
 
-    # Generate and store tokens
-    for my $i (1 .. $count) {
-        my $token = $self->token; # Generate
-        $voting->create_related(tokens => {name => $token});
+    # What to do?
+    my $current = $voting->tokens->count;
+    my $diff    = $count - $current;
+
+    # Generate and store new token
+    if ($diff > 0) {
+        $voting->create_related(tokens => {name => $self->token})
+            for 1 .. $diff;
+    }
+    elsif ($count < $current) {
+        my @tokens  = $voting->tokens;
+        my $last_id = $tokens[$count-1]->id;
+        $voting->tokens({id => {'>' => $last_id}})->delete;
     }
 
     # Done
