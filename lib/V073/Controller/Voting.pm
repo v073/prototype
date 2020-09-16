@@ -2,13 +2,34 @@ package V073::Controller::Voting;
 use Mojo::Base 'Mojolicious::Controller', -signatures;
 
 sub create_voting_form ($self) {
-    # Template only
+
+    # Prepare types and options
+    # Hide free types (basically default options only)
+    my $types = $self->db('Type')->search({
+        name => {-not_like => 'free_%'},
+    }, {
+        prefetch => 'options',
+        order_by => 'options.id', # important for option stringification
+    });
+
+    # Option stringification
+    my %string;
+    for my $type ($types->all) {
+        $string{$type->name} = join ' / ' => map $_->text => $type->options;
+    }
+
+    # Done
+    $self->stash(
+        types       => $types,
+        type_string => \%string,
+    );
 }
 
 sub create_voting ($self) {
 
-    # Use default options
-    my $type = $self->db('Type')->first;
+    # Find the correct type
+    my $type = $self->db('Type')->find($self->param('type'));
+    return $self->reply->not_found unless defined $type;
 
     # Create
     my $voting = $self->db('Voting')->create({

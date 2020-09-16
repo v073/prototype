@@ -1,10 +1,16 @@
 % layout 'default';
 % title 'Create a voting';
 <h1><%= title %></h1>
+
+% my @type_select = map {[$type_string->{$_->name} => $_->name]} $types->all;
 %= form_for create_voting => (method => 'post') => begin
     <p>
         %= label_for text => 'Text:'
         %= text_field text => (id => 'text')
+    </p>
+    <p>
+        %= label_for type => 'Options:'
+        %= select_field type => \@type_select
     </p>
     <p>
         %= label_for token_count => 'Optional: initial token number:'
