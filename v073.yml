@@ -6,8 +6,8 @@ token_length: 9
 
 voting:
     max_token_count: 100
+    abstention: Enthaltung
     default_options:
         pro_contra:
             - Dafür
             - Dagegen
-            - Enthaltung

@@ -49,6 +49,10 @@ sub _add_default_options ($self) {
         # Create type and options
         my $type = $self->db('Type')->create({name => $type_name});
         $type->create_related(options => {text => $_}) for @$option_names;
+
+        # Add abstention option
+        my $abstention = $self->config('voting')->{abstention};
+        $type->create_related(options => {text => $abstention});
     }
 }
 
