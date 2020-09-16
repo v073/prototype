@@ -174,12 +174,13 @@ sub delete_token ($self) {
 sub start ($self) {
 
     # Prepare
-    my $voting      = $self->stash('voting');
-    my $token_count = $voting->tokens->count;
+    my $voting          = $self->stash('voting');
+    my $option_count    = $voting->type->options->count;
+    my $token_count     = $voting->tokens->count;
 
     # Forbidden state to start the voting?
     return $self->render(text => 'Forbidden', status => 403)
-        if $token_count <= 0;
+        if $option_count <= 0 or $token_count <= 0;
 
     # OK, start
     $self->stash('voting')->update({started => 1});
