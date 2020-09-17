@@ -14,3 +14,8 @@ voting:
         pro_contra:
             - For
             - Against
+
+design_colors:
+    - teal
+    - deep-orange
+    - amber

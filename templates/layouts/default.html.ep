@@ -10,7 +10,7 @@
     </head>
     <body>
         %= include 'header'
-        <main>
+        <main class="<%= c 3 %> lighten-5" style="padding-bottom: 3em">
             <div class="container">
             %= content
             </div>
