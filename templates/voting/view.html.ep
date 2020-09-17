@@ -34,7 +34,6 @@
 % my $token_count  = $voting->tokens->count;
 % if (not $voting->started and $option_count > 0 and $token_count > 0) {
     %= button_to 'Start the voting' => 'start_voting'
-    with <%= $token_count %> tokens!
 % }
 
 % if ($voting->started and not $voting->closed) {
