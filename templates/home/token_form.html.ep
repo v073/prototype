@@ -1,13 +1,26 @@
 % layout 'default';
-% title 'Insert token';
-<h1>Welcome to V073!</h1>
-<hr>
+% title 'Enter your token';
+
 %= form_for token_dispatch => (method => 'post') => begin
-    <p>
-        %= label_for token => 'Enter your token:'
-        %= text_field token => (id => 'token')
-        %= submit_button 'Enter'
-    </p>
+<div class="row" style="margin-top: 2em">
+    <div class="col s12 offset-m2 m8 offset-l3 l6">
+        <div class="card white">
+            <div class="card-content">
+                <div class="card-title"><%= title %></div>
+                <div class="input-field" style="margin-top: 2em; margin-bottom: 0">
+                    <i class="material-icons prefix">vpn_key</i>
+                    %= label_for token => 'Token'
+                    %= text_field token => (id => 'token')
+                </div>
+            </div>
+            <div class="card-action">
+                %= t button => (type => 'submit', class => 'btn waves-effect waves-light') => begin
+                    <i class="material-icons left">login</i>
+                    Enter
+                % end
+            </div>
+        </div>
+        <p class="right"><%= link_to 'Create a new voting' => 'create', (class => 'btn btn-flat') %></p>
+    </div>
+</div>
 % end
-<hr>
-<p>... or start a <%= link_to 'new voting' => 'create' %></p>
