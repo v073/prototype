@@ -1,4 +1,4 @@
-<footer class="page-footer <%= c 2 %> darken-3">
+<footer class="page-footer <%= col 2 %> darken-3">
     <div class="container">
         <div class="row">
             <div class="col l6 s12">
