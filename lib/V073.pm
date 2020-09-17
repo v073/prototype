@@ -42,9 +42,17 @@ sub _add_default_options ($self) {
 
     # Add to database
     while (my ($type_name, $option_names) = each %$default_options) {
+
+        # Already exists
         next if $self->db('Type')->count({name => $type_name});
+
+        # Create type and options
         my $type = $self->db('Type')->create({name => $type_name});
         $type->create_related(options => {text => $_}) for @$option_names;
+
+        # Add abstention option
+        my $abstention = $self->config('voting')->{abstention};
+        $type->create_related(options => {text => $abstention});
     }
 }
 
@@ -85,6 +93,8 @@ sub _set_routes ($self) {
     my $ra = $r->under('/voting')->to('voting#restricted');
     $ra->get('/admin_token')->to('#admin_token')->name('admin_token');
     $ra->get('/')->to('#view')->name('voting');
+    $ra->post('/options')->to('#add_option')->name('add_option');
+    $ra->post('/options/delete')->to('#delete_option')->name('delete_option');
     $ra->post('/tokens')->to('#manage_tokens')->name('manage_tokens');
     $ra->post('/tokens/delete')->to('#delete_token')->name('delete_token');
     $ra->post('/start')->to('#start')->name('start_voting');

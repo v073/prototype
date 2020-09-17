@@ -2,15 +2,58 @@ package V073::Controller::Voting;
 use Mojo::Base 'Mojolicious::Controller', -signatures;
 
 sub create_voting_form ($self) {
-    # Template only
+
+    # Prepare types and options
+    # Hide free types (basically default options only)
+    my $types = $self->db('Type')->search({
+        name => {-not_like => 'free_%'},
+    }, {
+        prefetch => 'options',
+        order_by => 'options.id', # important for option stringification
+    });
+
+    # Option stringification
+    my %string;
+    for my $type ($types->all) {
+        $string{$type->name} = join ' / ' => map $_->text => $type->options;
+    }
+
+    # Done
+    $self->stash(
+        types       => $types,
+        type_string => \%string,
+    );
+}
+
+sub _create_free_type_name ($len = 20) {
+    my @chars = ('a'..'z', '0'..'9');
+    return join '' => map $chars[rand @chars] => 1 .. $len;
 }
 
 sub create_voting ($self) {
 
-    # Use default options
-    my $type = $self->db('Type')->first;
+    # Create a new type
+    my $type_name = $self->param('type');
+    my $type;
+    if ($type_name eq 'free') {
 
-    # Create
+        # Create the type
+        $type_name = 'free_' . _create_free_type_name;
+        $self->db('Type')->create({name => $type_name});
+        $type = $self->db('Type')->find($type_name);
+
+        # Create the initial option (abstention)
+        my $abst = $self->config('voting')->{abstention};
+        $type->create_related(options => {text => $abst});
+    }
+
+    # Or try to load the correct type
+    else {
+        $type = $self->db('Type')->find($type_name);
+        return $self->reply->not_found unless defined $type;
+    }
+
+    # Create the voting
     my $voting = $self->db('Voting')->create({
         text    => $self->param('text'),
         type    => $type->name,
@@ -79,6 +122,42 @@ sub view ($self) {
     return $self->render(template => 'voting/view');
 }
 
+sub add_option ($self) {
+    my $type = $self->stash('voting')->type;
+
+    # Not possible with un-free types
+    return $self->render(text => 'Type not free', status => 403)
+        unless $type->name =~ /^free_/;
+
+    # Prepare option text
+    my $text = $self->param('option');
+    return $self->render(text => 'No option given', status => 403)
+        unless defined $text and $text =~ /\S/;
+    $text =~ s/^\s*(.*?)\s*$/$1/;
+
+    # Create the new option for the voting's type
+    $type->create_related(options => {text => $text});
+
+    # Done
+    return $self->redirect_to('voting');
+}
+
+sub delete_option ($self) {
+    my $voting = $self->stash('voting');
+
+    # Too late?
+    return $self->render(text => 'Voting started', status => 403)
+        if $voting->started;
+
+    # Delete
+    my $oid = $self->param('option');
+    my $del = $voting->type->delete_related(options => {id => $oid});
+    return $self->reply->not_found unless $del;
+
+    # Done
+    return $self->redirect_to('voting');
+}
+
 sub manage_tokens ($self) {
     my $voting = $self->stash('voting');
 
@@ -131,12 +210,13 @@ sub delete_token ($self) {
 sub start ($self) {
 
     # Prepare
-    my $voting      = $self->stash('voting');
-    my $token_count = $voting->tokens->count;
+    my $voting          = $self->stash('voting');
+    my $option_count    = $voting->type->options->count;
+    my $token_count     = $voting->tokens->count;
 
     # Forbidden state to start the voting?
     return $self->render(text => 'Forbidden', status => 403)
-        if $token_count <= 0;
+        if $option_count <= 0 or $token_count <= 0;
 
     # OK, start
     $self->stash('voting')->update({started => 1});
