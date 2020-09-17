@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html>
-  <head><title><%= title %> - V073</title></head>
-  <body>
-    <main><%= content %></main>
-    <hr>
-    <footer>
-      <p>This page doesn't work without cookies. 🍪</p>
-      <p>Released as open source software under the MIT license</p>
-      <p><a href="https://github.com/memowe/v073">V073 code @ GitHub</a></p>
-    </footer>
-  </body>
+    <head>
+        <title><%= title %> - V073</title>
+        %= stylesheet 'https://fonts.googleapis.com/icon?family=Material+Icons'
+        %= stylesheet 'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css'
+		%= stylesheet '/css/style.css'
+        %= javascript 'https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js'
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    <body>
+        <main>
+            <div class="container">
+            %= content
+            </div>
+        </main>
+    </body>
 </html>
