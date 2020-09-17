@@ -1,0 +1,7 @@
+<header>
+	<nav>
+    	<div class="nav-wrapper">
+			%= link_to v073 => 'home' => (class => 'center brand-logo')
+    	</div>
+	</nav>
+</header>
