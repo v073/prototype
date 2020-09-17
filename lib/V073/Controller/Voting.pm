@@ -142,6 +142,22 @@ sub add_option ($self) {
     return $self->redirect_to('voting');
 }
 
+sub delete_option ($self) {
+    my $voting = $self->stash('voting');
+
+    # Too late?
+    return $self->render(text => 'Voting started', status => 403)
+        if $voting->started;
+
+    # Delete
+    my $oid = $self->param('option');
+    my $del = $voting->type->delete_related(options => {id => $oid});
+    return $self->reply->not_found unless $del;
+
+    # Done
+    return $self->redirect_to('voting');
+}
+
 sub manage_tokens ($self) {
     my $voting = $self->stash('voting');
 

@@ -10,6 +10,12 @@
     % for my $option (@options) {
         <li>
             %= $option->text
+            % if (not $voting->started) {
+                %= form_for delete_option => (method => 'post') => begin
+                    %= hidden_field option => $option->id
+                    %= submit_button 'X'
+                % end
+            % }
         </li>
     % }
     </ul>
