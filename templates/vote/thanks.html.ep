@@ -1,5 +1,17 @@
 % layout 'default';
 % title 'Voting ' . $voting->text;
-<h1><%= title %></h1>
-<p>Thank your for casting your vote!</p>
-<p><%= link_to 'Back to the voting' => 'vote' %></p>
+
+<div class="row" style="margin-top: 2em">
+    <div class="col s12 offset-m2 m8 offset-l3 l6">
+        <div class="card white">
+            <div class="card-content">
+                <div class="card-title">Voting</div>
+                <blockquote style="font-size: 1.2em; font-weight: bold"><%= $voting->text %></blockquote>
+                <p>Thank you for casting your vote!</p>
+            </div>
+            <div class="card-action">
+                %= link_to Continue => 'vote', (class => 'btn')
+            </div>
+        </div>
+    </div>
+</div>
