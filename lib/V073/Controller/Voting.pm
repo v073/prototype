@@ -206,7 +206,7 @@ sub delete_token ($self) {
     # Delete
     my $token   = $self->param('id');
     my $deleted = $voting->delete_related(tokens => {id => $token});
-    return $self->reply->not_found unless $deleted;
+    return $self->reply->not_found if $deleted == 0;
 
     # Done
     return $self->redirect_to('voting');
