@@ -1,80 +1,165 @@
 % layout 'default';
-% title 'Voting ' . $voting->text;
-<h1><%= title %></h1>
+% title 'Voting setup';
+% my $option_count  = $voting->type->options->count;
+% my $token_count   = $voting->tokens->count;
+% my @tokens        = $voting->tokens({}, {order_by => 'id'});
+<h4><%= title %></h4>
 
-<hr>
-<h2>Available options</h2>
+<div class="row">
+    <div class="col s12 m6">
 
-% if (my @options = $voting->type->options) {
-    <ul>
-    % for my $option (@options) {
-        <li>
-            %= $option->text
-            % if (not $voting->started) {
-                %= form_for delete_option => (method => 'post') => begin
-                    %= hidden_field option => $option->id
-                    %= submit_button 'X'
-                % end
+        % if (not $voting->started) {
+            %= form_for update_text => (method => 'post') => begin
+                <div class="card white">
+                    <div class="card-content">
+                        <div class="card-title">Question / Proposal</div>
+                        <p class="input-field" style="margin-top: 2em">
+                            %= label_for text => 'Text:'
+                            %= text_field text => $voting->text => (id => 'text')
+                        </p>
+                    </div>
+                    <div class="card-action">
+                        %= t button => (type => 'submit', class => 'btn') => begin
+                            <i class="material-icons left">save</i>
+                            Update
+                        % end
+                    </div>
+                </div>
+            % end
+        % } else {
+            <div class="card white">
+                <div class="card-content">
+                    <div class="card-title">Question / Proposal</div>
+                    <p><%= $voting->text %></p>
+                    % if (not $voting->closed) {
+                        <p style="margin-top: 1em"><strong>The voting is open.</strong></p>
+                    % }
+                </div>
+            </div>
+        % }
+
+    </div>
+    <div class="col s12 m6">
+
+        <div class="card white">
+            <div class="card-content">
+                <div class="card-title">Options</div>
+                % if (my @options = $voting->type->options) {
+                    <ul class="collection">
+                    % for my $option (@options) {
+                        <li class="collection-item">
+                            %= $option->text
+                            % if ($voting->type->name =~ /^free_/ and not $voting->started) {
+                                %= link_to delete_option => {id => $option->id} => (class => 'secondary-content') => begin
+                                    <i class="material-icons">delete</i>
+                                % end
+                            % }
+                        </li>
+                    % }
+                    </ul>
+                % } else {
+                    <div class="card-panel <%= col 1 %> white-text">This voting has no options yet!</div>
+                % }
+            </div>
+            % if ($voting->type->name =~ /^free_/ and not $voting->started) {
+                <div class="card-action">
+                    %= form_for add_option => begin
+                    <p class="input-field">
+                        %= label_for option => 'Add a new option:'
+                        %= text_field option => (id => 'option')
+                    </p>
+                    <p>
+                        %= t button => (type => 'submit', class => 'btn') => begin
+                            <i class="material-icons left">add_circle</i>
+                            Add
+                        % end
+                    </p>
+                    % end
+                </div>
             % }
-        </li>
-    % }
-    </ul>
-% } else {
-    <p>No options yet.</p>
-% }
+        </div>
 
-% if ($voting->type->name =~ /^free_/ and not $voting->started) {
-    %= form_for add_option => begin
-    <p>
-        %= label_for option => 'Add a new option:'
-        %= text_field option => (id => 'option')
-        %= submit_button 'Add'
-    </p>
-    % end
-% }
+    </div>
+</div>
+<div class="row">
+    <div class="col s12">
 
-<hr>
+        <div class="card white">
+            <div class="card-content">
+                <div class="card-title" style="margin-bottom: 1em">Voter tokens</div>
+                <div class="row">
+
+                    <div class="col s12 m4">
+                        % if (not $voting->started) {
+                            %= form_for manage_tokens => (method => 'post') => begin
+                                <p class="input-field">
+                                    %= label_for token_count => 'Count'
+                                    %= text_field token_count => $token_count => (id => 'token_count')
+                                </p>
+                                <p style="margin-bottom: 2em">
+                                    %= t button => (type => 'submit', class => 'btn') => begin
+                                        <i class="material-icons left">save</i>
+                                        Update
+                                    % end
+                                </p>
+                            % end
+                        % }
+                        <p class="grey-text" style="margin-bottom: 1em">Token text list (for easy copy'n'pasting):</p>
+                        <textarea style="height: 5em; width: 100%"><%= join "\n" => map $_->name => @tokens %></textarea>
+                        </textarea>
+                    </div>
+
+                    % if (@tokens) {
+                        % my $middle = int($#tokens / 2);
+                        % my @first  = @tokens[ 0 .. $middle ];
+                        % my @second = @tokens[ $middle + 1 .. $#tokens ];
+                        % for my $ts (\@first, \@second) {
+                            <div class="col s12 m4">
+                                <ul class="collection">
+                                % for my $token (@$ts) {
+                                    <li class="collection-item">
+                                        %= $token->name
+                                        % if (not $voting->started) {
+                                            %= link_to delete_token => {id => $token->id} => (class => 'secondary-content') => begin
+                                                <i class="material-icons">delete</i>
+                                            % end
+                                        % }
+                                    </li>
+                                % }
+                                </ul>
+                            </div>
+                        % }
+                    % }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <p>
 
-% my $option_count = $voting->type->options->count;
-% my $token_count  = $voting->tokens->count;
 % if (not $voting->started and $option_count > 0 and $token_count > 0) {
-    %= button_to 'Start the voting' => 'start_voting'
+    %= form_for start_voting => (method => 'post') => begin
+        %= t button => (type => 'submit', class => 'btn-large left', style => 'margin: 1ex') => begin
+            <i class="material-icons left">check_circle</i>
+            Start the voting
+        % end
+    % end
 % }
 
 % if ($voting->started and not $voting->closed) {
-    %= button_to 'Close the voting' => 'close_voting'
-% }
-
-%= link_to 'View admin token' => 'admin_token'
-
-</p>
-<hr>
-
-<h2>Tokens for votes</h2>
-
-% if (not $voting->started) {
-    %= form_for manage_tokens => (method => 'post') => begin
-    <p>
-        %= text_field token_count => $token_count
-        Tokens.
-        %= submit_button 'Update'
-    </p>
+    %= form_for close_voting => (method => 'post') => begin
+        %= t button => (type => 'submit', class => 'btn-large left', style => 'margin: 1ex') => begin
+            <i class="material-icons left">close</i>
+            Close the voting
+        % end
     % end
 % }
 
-% if (my @tokens = $voting->tokens({}, {order_by => 'id'})) {
-<ol id="vote_tokens">
-    % for my $token (@tokens) {
-        <li>
-            %= $token->name
-            % if (not $voting->started) {
-                %= form_for delete_token => (method => 'post') => begin
-                    %= hidden_field token => $token->name
-                    %= submit_button 'X'
-                % end
-            % }
-        </li>
-    % }
-</ol>
-% }
+%= link_to admin_token => (class => 'btn-large btn-flat left', style => 'margin: 1ex') => begin
+    <i class="material-icons left">vpn_key</i>
+    Show admin token
+% end
+
+</p>
