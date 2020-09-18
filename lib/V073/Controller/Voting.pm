@@ -155,7 +155,7 @@ sub delete_option ($self) {
         if $voting->started;
 
     # Delete
-    my $oid = $self->param('option');
+    my $oid = $self->param('id');
     my $del = $voting->type->delete_related(options => {id => $oid});
     return $self->reply->not_found unless $del;
 
@@ -204,8 +204,8 @@ sub delete_token ($self) {
         if $voting->started;
 
     # Delete
-    my $token   = $self->param('token');
-    my $deleted = $voting->delete_related(tokens => {name => $token});
+    my $token   = $self->param('id');
+    my $deleted = $voting->delete_related(tokens => {id => $token});
     return $self->reply->not_found unless $deleted;
 
     # Done

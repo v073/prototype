@@ -95,9 +95,9 @@ sub _set_routes ($self) {
     $ra->get('/')->to('#view')->name('voting');
     $ra->post('/text')->to('#update_text')->name('update_text');
     $ra->post('/options')->to('#add_option')->name('add_option');
-    $ra->post('/options/delete')->to('#delete_option')->name('delete_option');
+    $ra->any('/option/:id/delete')->to('#delete_option')->name('delete_option');
     $ra->post('/tokens')->to('#manage_tokens')->name('manage_tokens');
-    $ra->post('/tokens/delete')->to('#delete_token')->name('delete_token');
+    $ra->any('/token/:id/delete')->to('#delete_token')->name('delete_token');
     $ra->post('/start')->to('#start')->name('start_voting');
     $ra->post('/close')->to('#close')->name('close_voting');
 
