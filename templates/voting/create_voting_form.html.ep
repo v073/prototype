@@ -20,7 +20,7 @@
                         % my @opt = (
                         %   ['Choose the options:' => 'choose', disabled => 'disabled', selected => 'selected'],
                         %   c(predefined => \@def),
-                        %   c(free => ['Define your own options']),
+                        %   c(free => [['Define your own options' => 'free']]),
                         % );
                         %= select_field type => \@opt
                     </div>
