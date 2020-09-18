@@ -73,6 +73,9 @@ sub _token_helper ($self) {
 
 sub _other_helpers ($self) {
 
+	# MaterializeCSS color name, col(2) is the 2nd, default for col is col(1)
+	$self->helper(col => sub {$self->config('design_colors')->[($_[1]//1)-1]});
+
     # Render percent from [0,1]
     $self->helper(percent => sub {sprintf '%.2f %%' => $_[1] * 100});
     # TODO localization?
