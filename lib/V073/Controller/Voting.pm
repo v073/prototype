@@ -122,6 +122,11 @@ sub view ($self) {
     return $self->render(template => 'voting/view');
 }
 
+sub update_text ($self) {
+    $self->stash('voting')->update({text => $self->param('text')});
+    return $self->redirect_to('voting');
+}
+
 sub add_option ($self) {
     my $type = $self->stash('voting')->type;
 

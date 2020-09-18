@@ -93,6 +93,7 @@ sub _set_routes ($self) {
     my $ra = $r->under('/voting')->to('voting#restricted');
     $ra->get('/admin_token')->to('#admin_token')->name('admin_token');
     $ra->get('/')->to('#view')->name('voting');
+    $ra->post('/text')->to('#update_text')->name('update_text');
     $ra->post('/options')->to('#add_option')->name('add_option');
     $ra->post('/options/delete')->to('#delete_option')->name('delete_option');
     $ra->post('/tokens')->to('#manage_tokens')->name('manage_tokens');
