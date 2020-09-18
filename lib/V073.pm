@@ -42,9 +42,17 @@ sub _add_default_options ($self) {
 
     # Add to database
     while (my ($type_name, $option_names) = each %$default_options) {
+
+        # Already exists
         next if $self->db('Type')->count({name => $type_name});
+
+        # Create type and options
         my $type = $self->db('Type')->create({name => $type_name});
         $type->create_related(options => {text => $_}) for @$option_names;
+
+        # Add abstention option
+        my $abstention = $self->config('voting')->{abstention};
+        $type->create_related(options => {text => $abstention});
     }
 }
 
@@ -64,6 +72,9 @@ sub _token_helper ($self) {
 }
 
 sub _other_helpers ($self) {
+
+	# MaterializeCSS color name, col(2) is the 2nd, default for col is col(1)
+	$self->helper(col => sub {$self->config('design_colors')->[($_[1]//1)-1]});
 
     # Render percent from [0,1]
     $self->helper(percent => sub {sprintf '%.2f %%' => $_[1] * 100});
@@ -85,8 +96,11 @@ sub _set_routes ($self) {
     my $ra = $r->under('/voting')->to('voting#restricted');
     $ra->get('/admin_token')->to('#admin_token')->name('admin_token');
     $ra->get('/')->to('#view')->name('voting');
-    $ra->post('/tokens')->to('#generate_tokens')->name('generate_tokens');
-    $ra->post('/tokens/delete')->to('#delete_token')->name('delete_token');
+    $ra->post('/text')->to('#update_text')->name('update_text');
+    $ra->post('/options')->to('#add_option')->name('add_option');
+    $ra->any('/option/:id/delete')->to('#delete_option')->name('delete_option');
+    $ra->post('/tokens')->to('#manage_tokens')->name('manage_tokens');
+    $ra->any('/token/:id/delete')->to('#delete_token')->name('delete_token');
     $ra->post('/start')->to('#start')->name('start_voting');
     $ra->post('/close')->to('#close')->name('close_voting');
 

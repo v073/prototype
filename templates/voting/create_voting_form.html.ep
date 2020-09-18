@@ -1,16 +1,42 @@
 % layout 'default';
 % title 'Create a voting';
-<h1><%= title %></h1>
+
 %= form_for create_voting => (method => 'post') => begin
-    <p>
-        %= label_for text => 'Text:'
-        %= text_field text => (id => 'text')
-    </p>
-    <p>
-        %= label_for token_count => 'Optional: initial token number:'
-        %= text_field token_count => 0 => (id => 'token_count')
-    </p>
-    <p>
-        %= submit_button 'Create voting'
-    </p>
+<div class="row" style="margin-top: 2em">
+    <div class="col s12 offset-m1 m10 offset-l2 l8">
+        <div class="card white">
+            <div class="card-content">
+                <div class="card-title"><%= title %></div>
+                <div class="row">
+                    <div class="col s12 input-field">
+                        %= label_for text => 'Text:'
+                        %= text_field text => (id => 'text')
+                        <span class="helper-text">e. g. I endorse proposal B.17</span>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom: 0">
+                    <div class="col s12 m8 input-field" style="margin-bottom: 0px">
+                        % my @def = map {[$type_string->{$_->name} => $_->name]} $types->all;
+                        % my @opt = (
+                        %   ['Choose the options:' => 'choose', disabled => 'disabled', selected => 'selected'],
+                        %   c(predefined => \@def),
+                        %   c(free => [['Define your own options' => 'free']]),
+                        % );
+                        %= select_field type => \@opt
+                    </div>
+                    <div class="col s12 m4 input-field" style="margin-bottom: 0px">
+                        %= label_for token_count => 'Initial token number:'
+                        %= text_field token_count => 0 => (id => 'token_count', class => 'right-align')
+                    </div>
+                </div>
+            </div>
+            <div class="card-action">
+                %= t button => (type => 'submit', class => 'btn waves-effect waves-light') => begin
+                    <i class="material-icons left">add_circle</i>
+                    Create voting
+                % end
+            </div>
+        </div>
+    </div>
+</div>
 % end

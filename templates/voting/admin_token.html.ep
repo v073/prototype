@@ -1,9 +1,17 @@
 % layout 'default';
 % title 'Voting ' . $voting->text;
-<h1>Important: Admin token</h1>
 
-<p>Write down your admin token for the voting: <em><%= $voting->text %></em></p>
-
-<p id="admin_token"><big><%= $voting->token %></big></p>
-
-<p><%= link_to Continue => 'voting' %></p>
+<div class="row" style="margin-top: 2em">
+    <div class="col s12 offset-m2 m8 offset-l3 l6">
+        <div class="card white">
+            <div class="card-content">
+                <div class="card-title">Your admin token</div>
+                <p><strong>Important</strong>: Write down your admin token for the voting <em><%= $voting->text %></em>:</p>
+                <blockquote><p style="font-size: 1.5em"><%= $voting->token %></p></blockquote>
+            </div>
+            <div class="card-action">
+                %= link_to 'OK, continue' => 'voting', (class => 'btn')
+            </div>
+        </div>
+    </div>
+</div>

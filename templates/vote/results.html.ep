@@ -1,25 +1,35 @@
 % layout 'default';
 % title 'Voting ' . $voting->text;
-<h1><%= title %></h1>
-<p>The vote has been closed. Here are the results.</p>
-<hr>
-<p>Out of <%= $token_total %> tokens, <%= $vote_total %> have been used to cast a vote.</p>
-<table>
-    <thead><tr>
-        <th>Option</th>
-        <th>Votes</th>
-        <th>% of votes</th>
-        <th>% of tokens</th>
-        </tr></thead>
-    <tbody>
-    % for my $option ($options->all) {
-    %   my $count = $vote_count->{$option->id} // 0;
-        <tr>
-            <td><%= $option->text %></td>
-            <td><%= $count %></td>
-            <td><%= percent $count / ($vote_total  || 1) %></td>
-            <td><%= percent $count / ($token_total || 1) %></td>
-        </tr>
-    % }
-    </tbody>
-</table>
+
+<div class="row" style="margin-top: 2em">
+    <div class="col s12 offset-m1 m10 offset-l2 l8">
+        <div class="card white">
+            <div class="card-content">
+                <div class="card-title">Voting results</div>
+                <blockquote style="font-size: 1.2em; font-weight: bold"><%= $voting->text %></blockquote>
+                <p>The voting has been closed. Out of <strong><%= $token_total %></strong> tokens, <strong><%= $vote_total %></strong> have been used to cast a vote. Here are the results:</p>
+                <table class="striped">
+                    <thead><tr>
+                        <th>Option</th>
+                        <th>Votes</th>
+                        <th>% of votes</th>
+                        <th>% of tokens</th>
+                        </tr></thead>
+                    <tbody>
+                    %# my @options = reverse sort {$vote_count->{$a->id} <=> $vote_count->{$b->id}} $options->all;
+                    % my @options = $options->all;
+                    % for my $option (@options) {
+                        % my $count = $vote_count->{$option->id} // 0;
+                        <tr>
+                            <td><%= $option->text %></td>
+                            <td><%= $count %></td>
+                            <td><%= percent $count / ($vote_total  || 1) %></td>
+                            <td><%= percent $count / ($token_total || 1) %></td>
+                        </tr>
+                    % }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

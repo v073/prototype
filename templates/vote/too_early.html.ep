@@ -1,4 +1,19 @@
 % layout 'default';
 % title 'Voting ' . $voting->text;
-<h1><%= title %></h1>
-<p>The voting has not yet been opened. Please come back later.</p>
+
+<div class="row" style="margin-top: 2em">
+    <div class="col s12 offset-m2 m8 offset-l3 l6">
+        <div class="card white">
+            <div class="card-content">
+                <div class="card-title">Too early!</div>
+                <p>The voting "<em><%= $voting->text %></em>" has not yet been opened. Please come back later!</p>
+            </div>
+            <div class="card-action">
+                %= link_to vote => (class => 'btn') => begin
+                    <i class="material-icons left">refresh</i>
+                    Try again
+                % end
+            </div>
+        </div>
+    </div>
+</div>

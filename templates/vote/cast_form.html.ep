@@ -1,17 +1,31 @@
 % layout 'default';
 % title 'Voting ' . $voting->text;
-<h1><%= title %></h1>
-<p>Cast your vote:</p>
+
 %= form_for cast_vote => (method => 'post') => begin
-    <fieldset>
-        % for my $option ($options->all) {
-            % my $oid = 'option' . $option->id;
-            <strong>
-                %= radio_button option => $option->id => (id => $oid)
-                %= label_for $oid => $option->text
-            </strong>
-            <br>
-        % }
-        %= submit_button 'Vote'
-    </fieldset>
+    <div class="row" style="margin-top: 2em">
+        <div class="col s12 offset-m2 m8 offset-l3 l6">
+            <div class="card white">
+                <div class="card-content">
+                    <div class="card-title">Voting</div>
+                    <blockquote style="font-size: 1.2em; font-weight: bold"><%= $voting->text %></blockquote>
+                    <p>These are your options:</p>
+                    <fieldset style="margin-top: 1em">
+                    % for my $option ($options->all) {
+                        % my $oid = 'option' . $option->id;
+                        <p><label>
+                            %= radio_button option => $option->id => (id => $oid)
+                            <span><%= $option->text %></span>
+                        </label></p>
+                    % }
+                    </fieldset>
+                </div>
+                <div class="card-action">
+                    %= t button => (type => 'submit', class => 'btn') => begin
+                        <i class="material-icons left">done</i>
+                        Cast your vote
+                    % end
+                </div>
+            </div>
+        </div>
+    </div>
 % end
