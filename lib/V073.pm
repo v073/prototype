@@ -16,7 +16,7 @@ sub startup ($self) {
 sub _prepare_db ($self) {
 
     # Determine DB file names
-    my $db_file     = $self->home->rel_file(
+    my $db_file     = $ENV{V073_DB} // $self->home->rel_file(
         $self->config('db')->{file});
     my $schema_file = $self->home->rel_file(
         $self->config('db')->{schema_file});
