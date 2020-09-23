@@ -12,5 +12,4 @@ WriteMakefile(
         'DBIx::Class::Schema::Loader'   => '0.07',
         'Mojolicious'                   => '8.56',
     },
-    test                => {TESTS => 't/*.t'},
 );
